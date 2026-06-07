@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>爭奪線上體驗：谷歌、蘋果與臉書</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#1B2A4A;--cyan:#1CB5B5;--coral:#E85A4F;--gray:#F4F7FB;--white:#fff;--text:#2c3e50;--shadow:0 4px 20px rgba(0,0,0,.08)}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans TC',sans-serif;color:var(--text);background:#fff;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Noto Serif TC',serif}
+a{text-decoration:none;color:inherit}
+
+/* Progress */
+#prog{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--cyan),var(--coral));width:0%;z-index:9999;transition:width .1s}
+
+/* Navbar */
+#nav{position:fixed;top:3px;left:0;right:0;z-index:999;background:rgba(27,42,74,.93);backdrop-filter:blur(12px);padding:0 1.5rem;display:flex;align-items:center;gap:1rem;height:54px;transition:background .3s}
+#nav.light{background:rgba(255,255,255,.96);box-shadow:0 2px 12px rgba(0,0,0,.07)}
+#nav-logo{font-family:'Noto Serif TC',serif;font-weight:900;font-size:.95rem;color:var(--cyan);white-space:nowrap;flex-shrink:0}
+#nav-links{display:flex;gap:.3rem;list-style:none;flex:1;justify-content:center;flex-wrap:wrap}
+#nav-links a{font-size:.68rem;color:rgba(255,255,255,.72);padding:.28rem .55rem;border-radius:20px;transition:.25s;white-space:nowrap}
+#nav.light #nav-links a{color:var(--blue)}
+#nav-links a.active,#nav-links a:hover{background:var(--cyan);color:#fff!important}
+#burger{display:none;flex-direction:column;gap:5px;cursor:pointer;flex-shrink:0}
+#burger span{display:block;width:22px;height:2px;background:#fff;border-radius:2px;transition:.3s}
+#nav.light #burger span{background:var(--blue)}
+#mob-menu{display:none;position:fixed;top:57px;left:0;right:0;background:var(--blue);z-index:998;padding:1rem;flex-direction:column;gap:.4rem}
+#mob-menu a{color:rgba(255,255,255,.85);padding:.55rem 1rem;border-radius:8px;font-size:.9rem;display:block}
+#mob-menu a:hover{background:rgba(28,181,181,.2)}
+
+/* Sections */
+section{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:80px 2rem 4rem;position:relative;overflow:hidden}
+.wrap{max-width:1100px;margin:0 auto;width:100%}
+.lbl{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan);margin-bottom:.65rem;font-weight:700}
+.ttl{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;line-height:1.2;margin-bottom:1.25rem}
+.sub{font-size:.95rem;color:#64748b;max-width:680px;line-height:1.85}
+
+/* Animations */
+.fu{opacity:0;transform:translateY(36px);transition:opacity .7s,transform .7s}
+.fu.on{opacity:1;transform:none}
+.sc{opacity:0;transform:translateY(28px);transition:opacity .6s,transform .6s}
+.sc.on{opacity:1;transform:none}
+
+/* ── HERO ── */
+#hero{background:var(--blue);color:#fff;align-items:center;text-align:center;padding:80px 2rem 4rem}
+#stars{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hc{position:relative;z-index:1}
+.htag{display:inline-block;background:rgba(28,181,181,.18);border:1px solid var(--cyan);color:var(--cyan);padding:.28rem .9rem;border-radius:20px;font-size:.75rem;letter-spacing:.15em;margin-bottom:1.25rem}
+.ht{font-size:clamp(2rem,5.5vw,4.2rem);font-weight:900;line-height:1.15;margin-bottom:.65rem}
+.ht span{color:var(--cyan)}
+.hs{font-size:clamp(.95rem,1.8vw,1.25rem);color:rgba(255,255,255,.68);margin-bottom:2.25rem}
+.giants{display:flex;justify-content:center;gap:1.75rem;flex-wrap:wrap;margin-bottom:2.25rem}
+.giant{display:flex;flex-direction:column;align-items:center;gap:.45rem;width:132px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:1.1rem .9rem;transition:.3s}
+.giant:hover{background:rgba(28,181,181,.15);border-color:var(--cyan);transform:translateY(-4px)}
+.gn{font-family:'Noto Serif TC',serif;font-weight:900;font-size:1.05rem}
+.gt{font-size:.68rem;color:rgba(255,255,255,.55);text-align:center;line-height:1.55}
+.gc{color:#34a853}.ac{color:#a2aaad}.mc{color:#0082fb}
+.hm{font-size:.82rem;color:rgba(255,255,255,.45);margin-bottom:1.75rem}
+.arr{display:inline-flex;flex-direction:column;align-items:center;gap:.35rem;color:rgba(255,255,255,.45);font-size:.72rem;animation:bob 2s infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(7px)}}
+
+/* ── DEFINITION ── */
+#def{background:var(--gray)}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.75rem}
+.dc{background:#fff;border-radius:14px;padding:1.85rem;box-shadow:var(--shadow);transition:.3s}
+.dc:hover{transform:translateY(-5px);box-shadow:0 12px 30px rgba(0,0,0,.11)}
+.dc.old{border-left:4px solid #94a3b8}
+.dc.nw{border-left:4px solid var(--cyan)}
+.dy{font-size:.72rem;letter-spacing:.15em;font-weight:700;margin-bottom:.65rem}
+.dq{font-family:'Noto Serif TC',serif;font-size:1.2rem;font-weight:700;color:var(--blue);margin-bottom:.85rem;line-height:1.5}
+.db{font-size:.87rem;color:#64748b;line-height:1.9}
+.dtags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.1rem}
+.dtag{font-size:.7rem;background:var(--gray);padding:.22rem .6rem;border-radius:20px;color:var(--blue);font-weight:500}
+.dc.nw .dtag{background:rgba(28,181,181,.1);color:var(--cyan)}
+
+/* ── PYRAMID ── */
+#pyr{background:var(--blue);color:#fff}
+#pyr .ttl{color:#fff}
+.psub{font-size:.88rem;color:rgba(255,255,255,.58);margin-bottom:2.25rem}
+.pw{display:flex;gap:2.5rem;align-items:flex-start;flex-wrap:wrap}
+.pyramid{display:flex;flex-direction:column;align-items:center;gap:5px;flex:0 0 auto}
+.pl{display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;font-family:'Noto Serif TC',serif;font-weight:700;transition:.25s;opacity:0;transform:translateY(18px)}
+.pl.on{opacity:1;transform:none}
+.pl:hover{transform:scale(1.04);box-shadow:0 8px 22px rgba(0,0,0,.32)}
+.pl.sel{box-shadow:0 0 0 3px #fff,0 8px 22px rgba(0,0,0,.32)}
+.pli{display:flex;flex-direction:column;align-items:center;gap:.15rem;text-align:center;padding:.5rem .7rem}
+.pn{font-size:.64rem;opacity:.65;line-height:1}
+.pm{font-size:.8rem;line-height:1.25}
+.pe{font-size:.6rem;opacity:.55;line-height:1.2}
+.l1{background:linear-gradient(135deg,#16a34a,#22c55e);width:290px;min-height:56px}
+.l2{background:linear-gradient(135deg,#475569,#64748b);width:248px;min-height:56px}
+.l3{background:linear-gradient(135deg,#0e7490,#06b6d4);width:206px;min-height:56px}
+.l4{background:linear-gradient(135deg,#c2410c,#f97316);width:164px;min-height:56px}
+.l5{background:linear-gradient(135deg,#be123c,#f43f5e);width:122px;min-height:56px}
+.l6{background:linear-gradient(135deg,#4c1d95,#7c3aed);width:80px;min-height:64px}
+.pdet{flex:1;min-width:270px}
+.dc2{display:none;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:1.6rem}
+.dc2.show{display:block;animation:fin .35s ease}
+@keyframes fin{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+.dbadge{display:inline-block;padding:.22rem .7rem;border-radius:20px;font-size:.7rem;font-weight:700;margin-bottom:.9rem;letter-spacing:.06em}
+.dname{font-size:1.3rem;font-weight:900;margin-bottom:.45rem}
+.ddesc{font-size:.86rem;color:rgba(255,255,255,.73);line-height:1.9;margin-bottom:1.1rem}
+.dplats{display:flex;flex-direction:column;gap:.55rem}
+.drow{display:flex;gap:.7rem;align-items:flex-start}
+.dbg{font-size:.7rem;padding:.22rem .55rem;border-radius:6px;white-space:nowrap;font-weight:700;flex-shrink:0}
+.gb{background:rgba(52,168,83,.25);color:#4ade80}
+.ab{background:rgba(162,170,173,.2);color:#cbd5e1}
+.mb{background:rgba(0,130,251,.25);color:#60a5fa}
+.dn{font-size:.8rem;color:rgba(255,255,255,.78)}
+
+/* ── BATTLE ── */
+#bat{background:#fff}
+.bq{font-family:'Noto Serif TC',serif;font-size:clamp(1.3rem,2.5vw,2rem);font-weight:900;line-height:1.65;color:var(--blue);border-left:5px solid var(--cyan);padding-left:1.4rem;margin:1.75rem 0}
+.bg3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin-top:1.75rem}
+.bc{background:var(--gray);border-radius:12px;padding:1.4rem;transition:.3s;transform-style:preserve-3d}
+.bc:hover{transform:perspective(600px) rotateX(-4deg) rotateY(4deg) translateY(-4px);box-shadow:0 12px 28px rgba(0,0,0,.09)}
+.bi{font-size:1.85rem;margin-bottom:.65rem}
+.bc h4{font-size:.98rem;font-weight:700;color:var(--blue);margin-bottom:.45rem}
+.bc p{font-size:.83rem;color:#64748b;line-height:1.8}
+
+/* ── POLL ── */
+#poll{background:linear-gradient(135deg,#0d1c38 0%,var(--blue) 60%,#183838 100%);color:#fff;min-height:auto;padding:80px 2rem 5rem}
+#poll .ttl{color:#fff}
+.pi{display:grid;grid-template-columns:1fr 1fr;gap:2.75rem;align-items:center;margin-top:1.75rem}
+.qbox{display:flex;flex-direction:column;align-items:center;gap:1.1rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:1.85rem}
+#qrcode{background:#fff;padding:10px;border-radius:10px;display:inline-block}
+#qrcode canvas,#qrcode img{display:block}
+.qlbl{font-size:.78rem;color:rgba(255,255,255,.55);text-align:center;max-width:210px}
+.qbtn{display:block;background:var(--cyan);color:#fff;padding:.8rem 1.75rem;border-radius:30px;font-weight:700;font-size:.95rem;transition:.3s;text-align:center;width:100%;max-width:240px}
+.qbtn:hover{background:#16a0a0;transform:translateY(-2px);box-shadow:0 8px 22px rgba(28,181,181,.38)}
+.popts{display:flex;flex-direction:column;gap:.8rem}
+.ptblk h3{font-size:1.15rem;margin-bottom:.35rem;color:rgba(255,255,255,.9)}
+.ptblk p{font-size:.83rem;color:rgba(255,255,255,.52);margin-bottom:1.1rem}
+.popt{display:flex;align-items:center;gap:.9rem;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:.9rem 1.1rem;cursor:pointer;transition:.3s}
+.popt:hover{background:rgba(28,181,181,.18);border-color:var(--cyan)}
+.poi{font-size:1.4rem;flex-shrink:0}
+.pot{font-size:.88rem;font-weight:500}
+
+/* ── TAIWAN ── */
+#tw{background:var(--gray)}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin:1.75rem 0}
+.sc2{background:#fff;border-radius:14px;padding:1.4rem 1rem;text-align:center;box-shadow:var(--shadow);transition:.3s}
+.sc2:hover{transform:translateY(-5px) perspective(400px) rotateX(-3deg);box-shadow:0 12px 26px rgba(0,0,0,.09)}
+.sn{font-family:'Noto Serif TC',serif;font-size:2.4rem;font-weight:900;color:var(--cyan);line-height:1}
+.su{font-size:.77rem;color:#94a3b8}
+.sl{font-size:.8rem;color:#64748b;margin-top:.35rem}
+.bars{margin:1.75rem 0}
+.br{display:flex;align-items:center;gap:.9rem;margin-bottom:.9rem}
+.brl{font-size:.8rem;color:var(--blue);width:110px;flex-shrink:0;font-weight:500}
+.brt{flex:1;background:#e2e8f0;border-radius:20px;height:9px;overflow:hidden}
+.brf{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--cyan),var(--blue));width:0%;transition:width 1.4s cubic-bezier(.4,0,.2,1)}
+.brv{font-size:.78rem;color:var(--blue);font-weight:700;width:45px;text-align:right}
+.pr{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.4rem}
+.prc{background:#fff;border-radius:11px;padding:1.15rem;text-align:center;box-shadow:var(--shadow)}
+.prn{font-size:.78rem;color:#64748b;margin-bottom:.35rem}
+.prv{font-size:1.4rem;font-weight:900;color:var(--blue)}
+
+/* ── ECOSYSTEM ── */
+#eco{background:var(--blue);color:#fff}
+#eco .ttl{color:#fff}
+.eg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:1.75rem}
+.ec{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem;transition:.3s}
+.ec:hover{background:rgba(255,255,255,.11);transform:translateY(-4px)}
+.el{font-family:'Noto Serif TC',serif;font-size:1.4rem;font-weight:900;margin-bottom:.35rem}
+.es{font-size:.75rem;color:rgba(255,255,255,.52);margin-bottom:1.1rem}
+.etags{display:flex;flex-wrap:wrap;gap:.4rem}
+.etag{font-size:.7rem;background:rgba(255,255,255,.1);border-radius:20px;padding:.22rem .6rem;color:rgba(255,255,255,.78)}
+
+/* ── HISTORY ── */
+#hist{background:#fff}
+.tabs{display:flex;gap:.65rem;margin-bottom:1.75rem;flex-wrap:wrap}
+.tb{padding:.55rem 1.3rem;border-radius:30px;border:2px solid #e2e8f0;font-weight:700;font-size:.88rem;cursor:pointer;transition:.25s;background:#fff}
+.tb.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tb:hover:not(.on){border-color:var(--cyan);color:var(--cyan)}
+.tp{display:none}
+.tp.on{display:block;animation:fin .3s ease}
+.tl{position:relative;padding-left:1.85rem}
+.tl::before{content:'';position:absolute;left:.55rem;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--cyan),var(--blue))}
+.ti{position:relative;margin-bottom:1.6rem;padding-left:1.35rem}
+.td{position:absolute;left:-1.35rem;top:.3rem;width:11px;height:11px;border-radius:50%;background:var(--cyan);border:2px solid #fff;box-shadow:0 0 0 2px var(--cyan)}
+.ty{font-size:.72rem;font-weight:700;color:var(--cyan);letter-spacing:.1em;margin-bottom:.18rem}
+.te{font-size:.88rem;color:var(--text);line-height:1.75}
+
+/* ── GOVERNANCE ── */
+#gov{background:var(--gray)}
+.gg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:1.75rem}
+.gc2{background:#fff;border-radius:14px;overflow:hidden;box-shadow:var(--shadow);transition:.3s}
+.gc2:hover{transform:translateY(-5px) perspective(500px) rotateX(-2deg);box-shadow:0 16px 34px rgba(0,0,0,.11)}
+.gh{padding:1.1rem 1.4rem;color:#fff;font-family:'Noto Serif TC',serif;font-weight:900;font-size:1.05rem}
+.gog{background:linear-gradient(135deg,#1a73e8,#0d47a1)}
+.meg{background:linear-gradient(135deg,#0082fb,#004bbd)}
+.apg{background:linear-gradient(135deg,#555,#222)}
+.gb2{padding:1.1rem 1.4rem}
+.gi{display:flex;align-items:flex-start;gap:.55rem;margin-bottom:.8rem}
+.gd{width:6px;height:6px;border-radius:50%;background:var(--coral);flex-shrink:0;margin-top:.42rem}
+.gi p{font-size:.83rem;color:var(--text);line-height:1.72}
+.rc{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.9rem;border-top:1px solid #f1f5f9;padding-top:.8rem}
+.rch{font-size:.68rem;background:rgba(232,90,79,.1);color:var(--coral);padding:.18rem .55rem;border-radius:20px;font-weight:600}
+
+/* ── ADTECH ── */
+#adt{background:var(--blue);color:#fff;min-height:auto;padding:80px 2rem 5rem}
+#adt .ttl{color:#fff}
+.fd{margin:2.25rem auto;max-width:900px}
+.fr{display:flex;align-items:center;justify-content:center;gap:.65rem;flex-wrap:wrap;margin-bottom:1.1rem}
+.fn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:9px;padding:.8rem 1.1rem;text-align:center;font-size:.8rem;line-height:1.5;min-width:110px}
+.fn.hi{background:rgba(28,181,181,.25);border-color:var(--cyan)}
+.fn strong{display:block;font-size:.9rem;margin-bottom:.18rem}
+.fa{color:rgba(255,255,255,.38);font-size:1.1rem}
+.rr{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.75rem}
+.rb{background:rgba(232,90,79,.14);border:1px solid rgba(232,90,79,.28);border-radius:11px;padding:1.1rem}
+.rb h4{color:var(--coral);font-size:.92rem;margin-bottom:.45rem}
+.rb p{font-size:.8rem;color:rgba(255,255,255,.68);line-height:1.72}
+
+/* ── APPLE ── */
+#ap{background:#fff}
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;margin:1.75rem 0}
+.ac2{background:var(--gray);border-radius:13px;padding:1.4rem;transition:.3s}
+.ac2:hover{transform:translateY(-4px) perspective(500px) rotateY(-3deg);box-shadow:0 12px 26px rgba(0,0,0,.08)}
+.anum{width:30px;height:30px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.82rem;margin-bottom:.8rem}
+.ac2 h4{font-size:.97rem;color:var(--blue);margin-bottom:.45rem}
+.ac2 p{font-size:.83rem;color:#64748b;line-height:1.8}
+.ct{width:100%;border-collapse:collapse;margin-top:1.75rem;border-radius:11px;overflow:hidden;box-shadow:var(--shadow)}
+.ct th{background:var(--blue);color:#fff;padding:.8rem .95rem;font-size:.82rem;text-align:left}
+.ct td{padding:.75rem .95rem;font-size:.8rem;border-bottom:1px solid #f1f5f9;vertical-align:top}
+.ct tr:last-child td{border:none}
+.ct tr:nth-child(even) td{background:#f8fafc}
+
+/* ── FINDINGS ── */
+#find{background:linear-gradient(135deg,#0d1a35,var(--blue));color:#fff}
+#find .ttl{color:#fff}
+.fg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin:1.75rem 0}
+.fc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.6rem;transition:.3s}
+.fc:hover{background:rgba(255,255,255,.11);transform:translateY(-4px)}
+.fi{font-size:1.85rem;margin-bottom:.9rem}
+.fc h4{font-size:1rem;margin-bottom:.65rem;color:var(--cyan)}
+.fc p{font-size:.83rem;color:rgba(255,255,255,.7);line-height:1.9}
+.bq2{font-family:'Noto Serif TC',serif;font-size:clamp(1.1rem,2.2vw,1.6rem);font-weight:900;line-height:1.72;color:rgba(255,255,255,.9);text-align:center;margin:2.75rem auto;max-width:680px;padding:1.85rem;border:1px solid rgba(28,181,181,.28);border-radius:14px;background:rgba(28,181,181,.04)}
+
+/* ── SLIDE IMAGES ── */
+.simg{width:100%;border-radius:14px;box-shadow:0 8px 36px rgba(0,0,0,.28);display:block;margin-top:1.6rem}
+.simg-cap{text-align:center;font-size:.78rem;opacity:.52;margin-top:.55rem;letter-spacing:.04em}
+.simg-row{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:1.6rem}
+@media(max-width:700px){.simg-row{grid-template-columns:1fr}}
+
+/* ── QUESTIONS ── */
+#q{background:var(--gray)}
+.qg{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;margin-top:1.75rem}
+.qc{background:#fff;border-radius:14px;padding:1.85rem;box-shadow:var(--shadow);transition:.3s}
+.qc:hover{transform:translateY(-5px);box-shadow:0 16px 34px rgba(0,0,0,.09)}
+.qnum{font-size:2.8rem;font-weight:900;color:var(--cyan);opacity:.22;line-height:1;margin-bottom:.45rem}
+.qc h4{font-size:1rem;font-weight:700;color:var(--blue);margin-bottom:.9rem;line-height:1.6}
+.qsub{font-size:.83rem;color:#64748b;line-height:1.8}
+.cm{display:flex;flex-direction:column;gap:.45rem;margin-top:.9rem}
+.cmr{display:flex;gap:.5rem;align-items:center;font-size:.78rem}
+.cml{width:46px;font-weight:700;flex-shrink:0}
+.cmb{flex:1;height:7px;border-radius:20px}
+.cmv{width:55px;text-align:right;color:#64748b}
+
+/* ── REFERENCES ── */
+#refs{background:#0e1828;padding:5rem 0 4rem}
+.ref-wrap{max-width:900px;margin:0 auto;padding:0 1.5rem}
+.ref-cats{display:grid;grid-template-columns:1fr 1fr;gap:2.2rem 3rem}
+@media(max-width:700px){.ref-cats{grid-template-columns:1fr}}
+.ref-cat-block{}
+.ref-cat-hd{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);border-bottom:1px solid rgba(28,181,181,.22);padding-bottom:.5rem;margin-bottom:1rem}
+.ref-item{display:flex;gap:.55rem;margin-bottom:.85rem;align-items:flex-start}
+.ref-num{flex-shrink:0;font-size:.72rem;color:rgba(255,255,255,.35);margin-top:.18rem;min-width:1.5rem;text-align:right}
+.ref-body{font-size:.75rem;line-height:1.7;color:rgba(255,255,255,.62)}
+.ref-body a{color:rgba(28,181,181,.9);text-decoration:none;word-break:break-all}
+.ref-body a:hover{text-decoration:underline}
+
+/* ── PORTAL ── */
+#por{background:var(--blue);color:#fff;min-height:auto;padding:80px 2rem 5rem}
+#por .ttl{color:#fff}
+.porsub{font-size:.88rem;color:rgba(255,255,255,.58);margin-bottom:2.25rem}
+.porg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+.porc{position:relative;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.4rem 1.4rem 2.8rem;cursor:pointer;transition:.35s;overflow:hidden;text-decoration:none;color:#fff;display:block}
+.porc::after{content:'點擊體驗 →';position:absolute;bottom:-2.4rem;left:0;right:0;background:var(--cyan);color:#fff;text-align:center;padding:.65rem;font-size:.8rem;font-weight:700;transition:.3s}
+.porc:hover{transform:translateY(-6px);box-shadow:0 16px 34px rgba(0,0,0,.28);border-color:var(--cyan)}
+.porc:hover::after{bottom:0}
+.porl{font-size:.66rem;letter-spacing:.15em;color:var(--cyan);margin-bottom:.35rem;font-weight:700}
+.pori{font-size:1.65rem;margin-bottom:.65rem}
+.porn{font-size:1rem;font-weight:700;margin-bottom:.35rem}
+.pors{font-size:.8rem;color:rgba(255,255,255,.62)}
+.port{font-size:.75rem;color:rgba(255,255,255,.4);margin-top:.5rem}
+
+/* Footer */
+footer{background:#08112a;color:rgba(255,255,255,.38);text-align:center;padding:1.85rem;font-size:.78rem;line-height:1.85}
+
+/* RWD */
+@media(max-width:900px){
+  #nav-links{display:none}
+  #burger{display:flex}
+  .dg,.bg3,.eg,.gg,.ag,.fg,.porg,.qg,.sg{grid-template-columns:1fr}
+  .pi{grid-template-columns:1fr}
+  .rr{grid-template-columns:1fr}
+  .pr{grid-template-columns:1fr 1fr}
+  .pw{flex-direction:column}
+  .ct{font-size:.76rem}
+}
+@media(max-width:600px){
+  .sg{grid-template-columns:1fr 1fr}
+  .pr{grid-template-columns:1fr}
+  .giants{gap:.9rem}
+  .giant{width:108px;padding:.9rem .7rem}
+  .fa{display:none}
+  .fr{gap:.5rem}
+  .fn{min-width:90px;font-size:.74rem}
+}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div id="nav-logo">爭奪線上體驗</div>
+  <ul id="nav-links">
+    <li><a href="#hero">封面</a></li>
+    <li><a href="#def">定義</a></li>
+    <li><a href="#pyr">六層戰場</a></li>
+    <li><a href="#bat">爭奪戰</a></li>
+    <li><a href="#poll">即時投票</a></li>
+    <li><a href="#tw">台灣概況</a></li>
+    <li><a href="#eco">事業版圖</a></li>
+    <li><a href="#hist">發展歷史</a></li>
+    <li><a href="#gov">平台治理</a></li>
+    <li><a href="#adt">廣告壟斷</a></li>
+    <li><a href="#ap">Apple問題</a></li>
+    <li><a href="#find">研究發現</a></li>
+    <li><a href="#q">個案問題</a></li>
+    <li><a href="#por">延伸體驗</a></li>
+    <li><a href="#refs">參考資料</a></li>
+  </ul>
+  <div id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</nav>
+<div id="mob-menu">
+  <a href="#hero" onclick="toggleMenu()">封面</a>
+  <a href="#def" onclick="toggleMenu()">線上體驗定義</a>
+  <a href="#pyr" onclick="toggleMenu()">六層戰場</a>
+  <a href="#bat" onclick="toggleMenu()">爭奪戰</a>
+  <a href="#poll" onclick="toggleMenu()">即時投票</a>
+  <a href="#tw" onclick="toggleMenu()">台灣概況</a>
+  <a href="#eco" onclick="toggleMenu()">事業版圖</a>
+  <a href="#hist" onclick="toggleMenu()">發展歷史</a>
+  <a href="#gov" onclick="toggleMenu()">平台治理</a>
+  <a href="#adt" onclick="toggleMenu()">廣告壟斷</a>
+  <a href="#ap" onclick="toggleMenu()">Apple問題</a>
+  <a href="#find" onclick="toggleMenu()">研究發現</a>
+  <a href="#q" onclick="toggleMenu()">個案問題</a>
+  <a href="#por" onclick="toggleMenu()">延伸體驗</a>
+  <a href="#refs" onclick="toggleMenu()">參考資料</a>
+</div>
+
+<!-- § 1 HERO -->
+<section id="hero">
+  <canvas id="stars"></canvas>
+  <div class="hc">
+    <div class="htag fu">管理資訊系統 · 個案報告 P.289</div>
+    <h1 class="ht fu">爭奪<span>線上體驗</span><br>谷歌、蘋果與臉書</h1>
+    <p class="hs fu">誰能主導下一代線上體驗入口？</p>
+    <div class="giants">
+      <div class="giant sc"><div class="gn gc">Google</div><div class="gt">搜尋 / 廣告 / AI</div></div>
+      <div class="giant sc"><div class="gn ac">Apple</div><div class="gt">裝置 / 服務 / 隱私</div></div>
+      <div class="giant sc"><div class="gn mc">Meta</div><div class="gt">社群 / 廣告 / 穿戴</div></div>
+    </div>
+    <p class="hm fu">方宇旭 &nbsp;·&nbsp; 吳哲安 &nbsp;·&nbsp; 徐偉哲</p>
+    <div class="arr fu">
+      <svg width="20" height="20" fill="none" viewBox="0 0 20 20"><path d="M10 4v12M4 10l6 6 6-6" stroke="rgba(255,255,255,.45)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>向下探索</span>
+    </div>
+  </div>
+</section>
+
+<!-- § 2 DEFINITION -->
+<section id="def">
+  <div class="wrap">
+    <div class="lbl fu">Section 01</div>
+    <h2 class="ttl fu">線上體驗 定義</h2>
+    <p class="sub fu">定義演進：從平台使用感受到全旅程數位體驗</p>
+    <div class="dg">
+      <div class="dc old sc">
+        <div class="dy" style="color:#94a3b8">2018 課本定義</div>
+        <div class="dq">「網路平台怎麼被使用」</div>
+        <p class="db">使用者透過數位介面，所形成的整體使用感受與互動過程，包括操作便利性、內容取得、個人化推薦、跨裝置連結與服務整合等面向。</p>
+        <div class="dtags"><span class="dtag">搜尋平台</span><span class="dtag">App 應用</span><span class="dtag">社群媒體</span></div>
+      </div>
+      <div class="dc nw sc">
+        <div class="dy" style="color:var(--cyan)">2026 更新定義（DX）</div>
+        <div class="dq">「整個數位旅程怎麼被設計與優化」</div>
+        <p class="db">使用者於服務化 AI 代理等所有數位接觸點上的整體互動旅程，其核心在於跨通路一致性、資料驅動的個人化，以及以使用者為中心的服務自動化。</p>
+        <div class="dtags"><span class="dtag">AI 驅動</span><span class="dtag">個人化</span><span class="dtag">全旅程設計</span><span class="dtag">自動化服務</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- § 3 PYRAMID -->
+<section id="pyr">
+  <div class="wrap">
+    <div class="lbl fu" style="color:rgba(28,181,181,.8)">Section 02</div>
+    <h2 class="ttl fu">線上體驗的六層戰場</h2>
+    <p class="psub fu">由技術成熟度排序 — 越上層越前沿，越下層越是日常基礎建設。點擊各層查看詳情。</p>
+    <div class="pw">
+      <div class="pyramid" id="pyrstack">
+        <div class="pl l6" data-lay="6" onclick="showLay(6)"><div class="pli"><span class="pn">L6</span><span class="pm">沉浸式體驗</span><span class="pe">Immersive</span></div></div>
+        <div class="pl l5" data-lay="5" onclick="showLay(5)"><div class="pli"><span class="pn">L5</span><span class="pm">個人化 AI</span><span class="pe">Personalized AI</span></div></div>
+        <div class="pl l4" data-lay="4" onclick="showLay(4)"><div class="pli"><span class="pn">L4</span><span class="pm">內容娛樂型</span><span class="pe">Content Ent.</span></div></div>
+        <div class="pl l3" data-lay="3" onclick="showLay(3)"><div class="pli"><span class="pn">L3</span><span class="pm">社群互動型</span><span class="pe">Social</span></div></div>
+        <div class="pl l2" data-lay="2" onclick="showLay(2)"><div class="pli"><span class="pn">L2</span><span class="pm">交易服務型</span><span class="pe">Transaction</span></div></div>
+        <div class="pl l1" data-lay="1" onclick="showLay(1)"><div class="pli"><span class="pn">L1</span><span class="pm">資訊探索型</span><span class="pe">Discovery</span></div></div>
+      </div>
+      <div class="pdet">
+        <div id="d0" class="dc2 show"><p style="color:rgba(255,255,255,.55);font-size:.88rem;line-height:1.8">← 點擊左側任一層<br>查看三巨頭的代表服務與戰略分析</p></div>
+        <div id="d1" class="dc2">
+          <span class="dbadge" style="background:rgba(34,197,94,.2);color:#4ade80">L1 · 資訊探索型</span>
+          <h3 class="dname">Information Discovery</h3>
+          <p class="ddesc">線上體驗的基礎建設層，技術成熟、滲透率最高。搜尋引擎掌控資訊入口即掌控流量分配權，Google 以此建立廣告營收護城河，Apple 與 Meta 則透過裝置端與社群端的搜尋整合進行反制。</p>
+          <div class="dplats">
+            <div class="drow"><span class="dbg gb">Google</span><span class="dn">Google 搜尋 — 掌握 89% 全球搜尋市場</span></div>
+            <div class="drow"><span class="dbg ab">Apple</span><span class="dn">Spotlight 本機搜尋 / Siri 建議</span></div>
+            <div class="drow"><span class="dbg mb">Meta</span><span class="dn">Meta AI 搜尋整合（Facebook）</span></div>
+          </div>
+        </div>
+        <div id="d2" class="dc2">
+          <span class="dbadge" style="background:rgba(100,116,139,.25);color:#94a3b8">L2 · 交易服務型</span>
+          <h3 class="dname">Transaction Services</h3>
+          <p class="ddesc">承接探索意圖並將其轉化為實際交易的關鍵層。支付入口的控制權直接影響交易資料的歸屬，三大平台均以行動支付切入，爭奪消費者從「意圖」到「付款」的最後一哩路。</p>
+          <div class="dplats">
+            <div class="drow"><span class="dbg gb">Google</span><span class="dn">Google Wallet — WearOS 感應支付</span></div>
+            <div class="drow"><span class="dbg ab">Apple</span><span class="dn">Apple Pay — Apple Watch 感應支付</span></div>
+            <div class="drow"><span class="dbg mb">Meta</span><span class="dn">Meta Pay — Facebook/Instagram 內嵌購物</span></div>
+          </div>
+        </div>
+        <div id="d3" class="dc2">
+          <span class="dbadge" style="background:rgba(6,182,212,.2);color:#22d3ee">L3 · 社群互動型</span>
+          <h3 class="dname">Social Interaction</h3>
+          <p class="ddesc">以網路效應為核心競爭力，用戶規模越大、平台黏著度越高。Meta 深耕此層建立廣告帝國，並以社群資料向上延伸 AI 個人化；Google 與 Apple 則分別以 YouTube 社群與 iMessage 生態圈構築防禦陣地。</p>
+          <div class="dplats">
+            <div class="drow"><span class="dbg gb">Google</span><span class="dn">YouTube 社群功能</span></div>
+            <div class="drow"><span class="dbg ab">Apple</span><span class="dn">iMessage SharePlay — 同看同聽</span></div>
+            <div class="drow"><span class="dbg mb">Meta</span><span class="dn">Facebook 社團 — Family DAP 35.8 億</span></div>
+          </div>
+        </div>
+        <div id="d4" class="dc2">
+          <span class="dbadge" style="background:rgba(249,115,22,.2);color:#fb923c">L4 · 內容娛樂型</span>
+          <h3 class="dname">Content Entertainment</h3>
+          <p class="ddesc">注意力經濟的主戰場，使用者停留時長直接決定廣告收益上限。YouTube 以演算法推薦主導內容分發，Apple Music 以生態系綁定高消費用戶，Instagram Reels 以社群病毒性對抗 TikTok 的侵蝕。</p>
+          <div class="dplats">
+            <div class="drow"><span class="dbg gb">Google</span><span class="dn">YouTube Music — 觸及 18.1M 台灣用戶</span></div>
+            <div class="drow"><span class="dbg ab">Apple</span><span class="dn">Apple Music — 高端消費者生態系綁定</span></div>
+            <div class="drow"><span class="dbg mb">Meta</span><span class="dn">Instagram Reels — 短影音滲透率 88.41%</span></div>
+          </div>
+        </div>
+        <div id="d5" class="dc2">
+          <span class="dbadge" style="background:rgba(244,63,94,.2);color:#fb7185">L5 · 個人化 AI 型</span>
+          <h3 class="dname">Personalized AI</h3>
+          <p class="ddesc">以個人化資料為燃料、大型語言模型為引擎，即時生成高度客製化的互動體驗。掌握此層意味著重新定義搜尋、購物與服務的入口，是 Google 護城河面臨的最大威脅，也是 Apple 與 Meta 彎道超車的戰略制高點。</p>
+          <div class="dplats">
+            <div class="drow"><span class="dbg gb">Google</span><span class="dn">Gemini Live — AI 搜尋重塑資訊取得</span></div>
+            <div class="drow"><span class="dbg ab">Apple</span><span class="dn">Apple Intelligence / Siri / Visual Intelligence</span></div>
+            <div class="drow"><span class="dbg mb">Meta</span><span class="dn">Meta AI — Messenger 對話生成圖片</span></div>
+          </div>
+        </div>
+        <div id="d6" class="dc2">
+          <span class="dbadge" style="background:rgba(124,58,237,.25);color:#a78bfa">L6 · 沉浸式體驗型</span>
+          <h3 class="dname">Immersive Experience</h3>
+          <p class="ddesc">技術成熟度最低、商業化最早期的前沿層。VR、AR 與空間運算裝置試圖將數位體驗從「螢幕前」推進至「身歷其境」；Apple Vision Pro 主打高端生產力，Meta Ray-Ban 主打日常穿戴，代表截然不同的市場進入路徑假設。</p>
+          <div class="dplats">
+            <div class="drow"><span class="dbg gb">Google</span><span class="dn">Android XR 智慧眼鏡</span></div>
+            <div class="drow"><span class="dbg ab">Apple</span><span class="dn">Apple Vision Pro — 空間運算前沿裝置</span></div>
+            <div class="drow"><span class="dbg mb">Meta</span><span class="dn">Ray-Ban Meta 智慧眼鏡 — 日常穿戴路徑</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- § 4 BATTLE -->
+<section id="bat">
+  <div class="wrap">
+    <div class="lbl fu">Section 03</div>
+    <h2 class="ttl fu">線上體驗爭奪戰</h2>
+    <blockquote class="bq fu">「這三家爭奪的，不只是市場份額，而是主導我們每天如何搜尋、社交、觀看與消費的『入口權力』——而當入口集中在少數公司手裡，影響的就不只是商業，還有我們如何取得資訊、形成判斷。」</blockquote>
+    <p class="sub fu">現在人們花費大半時間使用行動裝置上網，甚至超越傳統桌上型電腦，成為最受歡迎的運算形式。對於每個擁有智慧型手機或平板電腦的用戶，只要有網路就能享受雲端運算的能力，而這就引發了科技業巨頭搶奪行動世界控制權的戰爭。</p>
+    <div class="bg3">
+      <div class="bc sc"><div class="bi">🔍</div><h4>搜尋入口</h4><p>Google 以 89% 市占率掌控全球搜尋，等於掌控了資訊的可見度。AI Mode 進一步強化了對答案呈現的控制權。</p></div>
+      <div class="bc sc"><div class="bi">📱</div><h4>裝置生態系</h4><p>Apple 以 iPhone + iOS + App Store 串聯整套數位服務，控制誰能進入生態系、如何收費、由誰制定規則。</p></div>
+      <div class="bc sc"><div class="bi">💬</div><h4>社群分發</h4><p>Meta 掌握龐大社交圖譜與演算法排序，能影響內容被誰看到、如何擴散，進而決定「討論什麼」。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- § 5 POLL -->
+<section id="poll">
+  <div class="wrap">
+    <div class="lbl fu" style="color:var(--cyan)">Section 04 · 互動</div>
+    <h2 class="ttl fu">日常使用習慣投票</h2>
+    <p style="color:rgba(255,255,255,.65);font-size:.92rem" class="fu">你每天最常使用哪一類線上服務？掃碼或點擊參與即時投票！</p>
+    <div class="pi">
+      <div class="qbox sc">
+        <div id="qrcode"></div>
+        <p class="qlbl">掃描 QR Code 進入即時投票<br>用手機相機對準即可</p>
+        <a class="qbtn" href="https://app.sli.do/event/dUcwDWYHoDqbYQ4NBTBtiG/live/polls" target="_blank" rel="noopener">📊 點我直接投票</a>
+      </div>
+      <div class="sc">
+        <div class="ptblk"><h3>選出你的答案</h3><p>點擊選項卡片或掃描左側 QR Code</p></div>
+        <div class="popts">
+          <a class="popt" href="https://app.sli.do/event/dUcwDWYHoDqbYQ4NBTBtiG/live/polls" target="_blank" rel="noopener"><span class="poi">💬</span><span class="pot">即時通訊（LINE、WhatsApp、iMessage）</span></a>
+          <a class="popt" href="https://app.sli.do/event/dUcwDWYHoDqbYQ4NBTBtiG/live/polls" target="_blank" rel="noopener"><span class="poi">🎬</span><span class="pot">影音娛樂（YouTube、Netflix、短影音）</span></a>
+          <a class="popt" href="https://app.sli.do/event/dUcwDWYHoDqbYQ4NBTBtiG/live/polls" target="_blank" rel="noopener"><span class="poi">📸</span><span class="pot">社群平台（Facebook、Instagram、Threads）</span></a>
+          <a class="popt" href="https://app.sli.do/event/dUcwDWYHoDqbYQ4NBTBtiG/live/polls" target="_blank" rel="noopener"><span class="poi">🗺️</span><span class="pot">搜尋 / 地圖（Google 搜尋、Google Maps）</span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- § 6 TAIWAN -->
+<section id="tw">
+  <div class="wrap">
+    <div class="lbl fu">Section 05</div>
+    <h2 class="ttl fu">台灣數位概況 2026</h2>
+    <p class="sub fu">台灣已高度數位化，網路使用者達 2,230 萬，社群媒體使用者達 1,810 萬。</p>
+    <div class="sg">
+      <div class="sc2 sc"><div class="sn" data-target="23.1">0</div><div class="su">百萬</div><div class="sl">總人口</div></div>
+      <div class="sc2 sc"><div class="sn" data-target="22.3">0</div><div class="su">百萬</div><div class="sl">網路使用者</div></div>
+      <div class="sc2 sc"><div class="sn" data-target="18.1">0</div><div class="su">百萬</div><div class="sl">社群媒體使用者</div></div>
+      <div class="sc2 sc"><div class="sn" data-target="29.1">0</div><div class="su">百萬</div><div class="sl">行動連線數</div></div>
+    </div>
+    <div class="bars fu">
+      <h3 style="font-size:1.05rem;margin-bottom:1.1rem;color:var(--blue)">服務使用率（TWNIC 2025）</h3>
+      <div class="br"><span class="brl">即時通訊</span><div class="brt"><div class="brf" data-w="99.3"></div></div><span class="brv">99.3%</span></div>
+      <div class="br"><span class="brl">短影音</span><div class="brt"><div class="brf" data-w="88.41"></div></div><span class="brv">88.4%</span></div>
+      <div class="br"><span class="brl">影音直播</span><div class="brt"><div class="brf" data-w="80"></div></div><span class="brv">80%+</span></div>
+      <div class="br"><span class="brl">社群網站</span><div class="brt"><div class="brf" data-w="80"></div></div><span class="brv">80%+</span></div>
+    </div>
+    <h3 class="fu" style="font-size:1.05rem;margin:1.5rem 0 .9rem;color:var(--blue)">廣告觸及人數（台灣）</h3>
+    <div class="pr">
+      <div class="prc sc"><div class="prn">YouTube</div><div class="prv" data-target="18.1" style="color:#FF0000">0M</div></div>
+      <div class="prc sc"><div class="prn">Facebook</div><div class="prv" data-target="17.3" style="color:#0082fb">0M</div></div>
+      <div class="prc sc"><div class="prn">Instagram</div><div class="prv" data-target="12.2" style="color:#C13584">0M</div></div>
+    </div>
+    <div class="simg-row fu">
+      <div>
+        <img src="images/tw-internet-stats.png" alt="台灣網路服務使用：即時通訊、影音、社群都很高" class="simg" loading="lazy">
+        <p class="simg-cap">資料來源：TWNIC 2025 台灣網路報告</p>
+      </div>
+      <div>
+        <img src="images/tw-ad-reach.png" alt="台灣主要平台廣告觸及人數" class="simg" loading="lazy">
+        <p class="simg-cap">資料來源：DataReportal Digital 2026: Taiwan</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- § 7 ECOSYSTEM -->
+<section id="eco">
+  <div class="wrap">
+    <div class="lbl fu" style="color:rgba(28,181,181,.8)">Section 06</div>
+    <h2 class="ttl fu">事業群版圖</h2>
+    <p style="color:rgba(255,255,255,.6);font-size:.92rem" class="fu">三巨頭各以不同核心能力構築生態系帝國</p>
+    <div class="eg">
+      <div class="ec sc"><div class="el gc">Google</div><div class="es">以搜尋入口與 AI 為核心</div><div class="etags"><span class="etag">Search</span><span class="etag">YouTube</span><span class="etag">Gemini</span><span class="etag">Google Ads</span><span class="etag">Android</span><span class="etag">Chrome</span><span class="etag">Maps</span><span class="etag">Wallet</span><span class="etag">Play Store</span><span class="etag">AI Mode</span><span class="etag">NotebookLM</span></div></div>
+      <div class="ec sc"><div class="el ac">Apple</div><div class="es">以裝置、服務與隱私為核心</div><div class="etags"><span class="etag">iPhone/iPad/Mac</span><span class="etag">iOS/macOS</span><span class="etag">App Store</span><span class="etag">Apple Pay</span><span class="etag">Apple Music</span><span class="etag">Apple TV+</span><span class="etag">iCloud</span><span class="etag">Apple Intelligence</span><span class="etag">Vision Pro</span><span class="etag">ATT 隱私</span></div></div>
+      <div class="ec sc"><div class="el mc">Meta</div><div class="es">以社群、廣告與 AI 為核心</div><div class="etags"><span class="etag">Facebook</span><span class="etag">Instagram</span><span class="etag">WhatsApp</span><span class="etag">Threads</span><span class="etag">Meta AI</span><span class="etag">Meta Pay</span><span class="etag">Ray-Ban Meta</span><span class="etag">Reels</span><span class="etag">Messenger</span><span class="etag">廣告技術</span></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- § 8 HISTORY -->
+<section id="hist">
+  <div class="wrap">
+    <div class="lbl fu">Section 07</div>
+    <h2 class="ttl fu">三巨頭發展歷史</h2>
+    <p class="sub fu">點擊切換查看各公司的關鍵里程碑</p>
+    <div class="tabs fu">
+      <button class="tb on" onclick="swTab('google',this)">Google</button>
+      <button class="tb" onclick="swTab('meta',this)">Meta</button>
+      <button class="tb" onclick="swTab('apple',this)">Apple</button>
+    </div>
+    <div id="tg" class="tp on">
+      <div class="tl">
+        <div class="ti sc"><div class="td"></div><div class="ty">1998</div><div class="te">Larry Page 與 Sergey Brin 在史丹佛創立 Google，以 PageRank 演算法革新搜尋引擎。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2004</div><div class="te">Gmail 推出；IPO 上市，股價發行價 $85。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2006</div><div class="te">以 16.5 億美元收購 YouTube，進入影音市場。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2008</div><div class="te">Android 首款手機 HTC Dream 發布，開始佈局行動生態系。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2015</div><div class="te">成立 Alphabet 母公司架構，推動多元業務佈局。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2018</div><div class="te">歐盟因 Android 反競爭行為裁罰 50 億美元。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2023</div><div class="te">Gemini AI 推出，正式進入大型語言模型競賽。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2025</div><div class="te">DOJ 搜尋壟斷案取得補救措施；AI Mode 推出重塑搜尋體驗；open-web 廣告技術壟斷案敗訴。</div></div>
+      </div>
+      <img src="images/hist-google.png" alt="Google 發展歷史完整時間軸" class="simg" loading="lazy">
+    </div>
+    <div id="tm" class="tp">
+      <div class="tl">
+        <div class="ti sc"><div class="td"></div><div class="ty">2004</div><div class="te">Mark Zuckerberg 在哈佛創立 Facebook，初期限哈佛學生使用。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2012</div><div class="te">以 10 億美元收購 Instagram；IPO 上市，市值 1,040 億美元。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2014</div><div class="te">以 190 億美元收購 WhatsApp；以 20 億美元收購 Oculus VR。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2018</div><div class="te">劍橋分析醜聞爆發，用戶資料隱私爭議席捲全球。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2021</div><div class="te">Facebook 更名 Meta，宣示元宇宙戰略轉型。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2023</div><div class="te">Threads 推出挑戰 Twitter（X）；Meta AI 整合進各平台。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2025</div><div class="te">FTC 上訴壟斷案；歐盟認定違反 DMA；全年營收 2,009.66 億美元；Family DAP 35.8 億。</div></div>
+      </div>
+      <img src="images/hist-meta.png" alt="Meta 發展歷史完整時間軸" class="simg" loading="lazy">
+    </div>
+    <div id="ta" class="tp">
+      <div class="tl">
+        <div class="ti sc"><div class="td"></div><div class="ty">1976</div><div class="te">Jobs、Wozniak 與 Wayne 創立 Apple Computer。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">1984</div><div class="te">Macintosh 問世，圖形化介面革命。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2001</div><div class="te">iPod 發布；iTunes Store 改變音樂產業。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2007</div><div class="te">iPhone 發布，重新定義智慧型手機，開啟行動網路時代。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2008</div><div class="te">App Store 上線，建立 30% 抽成的應用程式生態系。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2014</div><div class="te">Apple Pay 推出，進軍行動支付市場。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2021</div><div class="te">iOS 14.5 推出 ATT，衝擊行動廣告市場。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2024</div><div class="te">Apple Vision Pro 發布；Apple Intelligence 推出。</div></div>
+        <div class="ti sc"><div class="td"></div><div class="ty">2025</div><div class="te">歐盟認定違反 DMA；法國因 ATT 裁罰 1.5 億歐元；活躍裝置超過 25 億台。</div></div>
+      </div>
+      <img src="images/hist-apple.png" alt="Apple 發展歷史完整時間軸" class="simg" loading="lazy">
+    </div>
+  </div>
+</section>
+
+<!-- § 9 GOVERNANCE -->
+<section id="gov">
+  <div class="wrap">
+    <div class="lbl fu">Section 08</div>
+    <h2 class="ttl fu">平台治理新戰場</h2>
+    <p class="sub fu">從 2018 個案延伸到 2025–2026：個資、壟斷、AI 與平台責任</p>
+    <div class="gg">
+      <div class="gc2 sc"><div class="gh gog">Google</div><div class="gb2"><div class="gi"><div class="gd"></div><p><strong>搜尋壟斷案：</strong>DOJ 勝訴取得補救措施，Google 須停止排他性搜尋預裝合約，並向競爭對手開放搜尋資料。</p></div><div class="gi"><div class="gd"></div><p><strong>廣告技術壟斷：</strong>DOJ 在 open-web 廣告技術壟斷案勝訴，認定 Google 違法壟斷。</p></div><div class="gi"><div class="gd"></div><p><strong>AI 搜尋擴張：</strong>AI Mode 進一步介入資訊整理與導流，擴大入口權力，引發監管關注。</p></div><div class="rc"><span class="rch">搜尋導流</span><span class="rch">廣告技術</span><span class="rch">反壟斷訴訟</span></div></div></div>
+      <div class="gc2 sc"><div class="gh meg">Meta</div><div class="gb2"><div class="gi"><div class="gd"></div><p><strong>FTC 壟斷案：</strong>2026 年上訴，焦點在 Instagram、WhatsApp 併購是否消除潛在競爭。</p></div><div class="gi"><div class="gd"></div><p><strong>違反 DMA：</strong>歐盟認定「同意或付費」模式未提供真正等價的低個資選項。</p></div><div class="gi"><div class="gd"></div><p><strong>2025 全年營收：</strong>2,009.66 億美元；Family DAP 達 35.8 億人次。</p></div><div class="rc"><span class="rch">社群分發</span><span class="rch">資料使用</span><span class="rch">議題擴散</span></div></div></div>
+      <div class="gc2 sc"><div class="gh apg">Apple</div><div class="gb2"><div class="gi"><div class="gd"></div><p><strong>Epic Games：</strong>App Store 30% 抽成、外部付款導流爭議，挑戰平台生態控制。</p></div><div class="gi"><div class="gd"></div><p><strong>違反 DMA：</strong>歐盟認定 Apple 違反 anti-steering 義務，限制開發者引導外部付款。</p></div><div class="gi"><div class="gd"></div><p><strong>ATT 裁罰：</strong>法國因 App Tracking Transparency 裁罰 1.5 億歐元。</p></div><div class="rc"><span class="rch">App Store 入口</span><span class="rch">付款規則</span><span class="rch">裝置生態系</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- § 10 ADTECH -->
+<section id="adt">
+  <div class="wrap">
+    <div class="lbl fu" style="color:var(--cyan)">Section 09</div>
+    <h2 class="ttl fu">Google 廣告壟斷</h2>
+    <p style="color:rgba(255,255,255,.65);font-size:.92rem" class="fu">一條龍控制 Ad Tech Stack：在開放網路廣告中，Google 同時站在買方工具、交易市場與賣方工具三個關鍵位置。</p>
+    <div class="fd fu">
+      <div class="fr">
+        <div class="fn"><strong>廣告主</strong><br>Advertisers<br><small style="opacity:.55">廣告版位需求</small></div>
+        <div class="fa">→</div>
+        <div class="fn hi"><strong>Google Ads / DV360</strong><br>買方工具<br><small style="opacity:.7">協助廣告主購買版位</small></div>
+        <div class="fa">→</div>
+        <div class="fn hi"><strong>AdX</strong><br>廣告交易平台<br><small style="opacity:.7">媒合買賣雙方</small></div>
+        <div class="fa">→</div>
+        <div class="fn hi"><strong>DFP / Ad Manager</strong><br>賣方工具<br><small style="opacity:.7">協助媒體銷售版位</small></div>
+        <div class="fa">→</div>
+        <div class="fn"><strong>媒體 / 出版商</strong><br>Publishers</div>
+      </div>
+      <p style="text-align:center;font-size:.78rem;color:rgba(255,255,255,.38);margin-top:.4rem">Google 同時握有交易兩端與中間市場 ── 「裁判兼球員」</p>
+    </div>
+    <div class="rr fu">
+      <div class="rb"><h4>⚖️ 利益衝突</h4><p>同時服務買方與賣方，可能偏向自家系統與交易路徑，影響競價公正性。</p></div>
+      <div class="rb"><h4>🔒 資訊不對稱</h4><p>掌握競價、流量、價格與成效資料，外部競爭者難以看見全貌。</p></div>
+      <div class="rb"><h4>🚧 市場封鎖</h4><p>競爭者即使只挑單一環節切入，也可能被整套堆疊排擠出市場。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- § 11 APPLE -->
+<section id="ap">
+  <div class="wrap">
+    <div class="lbl fu">Section 10</div>
+    <h2 class="ttl fu">Apple 的問題</h2>
+    <p class="sub fu">並非沒有問題，而是問題型態不同 ── 焦點在 App Store、付款規則與平台制定權</p>
+    <div class="ag">
+      <div class="ac2 sc"><div class="anum">1</div><h4>Epic Games 挑戰 App Store</h4><p>爭議核心在內購抽成（30%）、外部付款導流限制與 App 生態控制。Epic 繞過 App Store 付款機制遭下架，引發跨國訴訟。</p></div>
+      <div class="ac2 sc"><div class="anum">2</div><h4>歐盟認定違反 Anti-Steering 義務</h4><p>Apple 限制開發者不得自由引導用戶到外部付款，成為 DMA 監管重點。歐盟執行委員會於 2025 年認定違規。</p></div>
+      <div class="ac2 sc"><div class="anum">3</div><h4>法國因 ATT 裁罰 1.5 億歐元</h4><p>App Tracking Transparency（ATT）雖以隱私為名，被認定對競爭廣告平台造成不公平影響，法國競爭主管機關裁罰。</p></div>
+    </div>
+    <h3 class="fu" style="font-size:1.05rem;margin:1.75rem 0 .9rem;color:var(--blue)">三巨頭問題型態對比</h3>
+    <table class="ct fu">
+      <thead><tr><th>公司</th><th>主要爭議來源</th><th>核心問題</th></tr></thead>
+      <tbody>
+        <tr><td style="font-weight:700;color:#1a73e8">Google</td><td>資料 + 搜尋 + 廣告技術</td><td>決定「找得到什麼、被看見什麼」</td></tr>
+        <tr><td style="font-weight:700;color:#0082fb">Meta</td><td>社群 + 演算法 + 廣告分發</td><td>決定「討論什麼、如何被擴散」</td></tr>
+        <tr><td style="font-weight:700;color:#555">Apple</td><td>App Store + 付款規則 + 平台治理</td><td>決定「誰能進入生態系、如何收費」</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- § 12 FINDINGS -->
+<section id="find">
+  <div class="wrap">
+    <div class="lbl fu" style="color:var(--cyan)">Section 11</div>
+    <h2 class="ttl fu">研究發現：科技巨頭仍在爭奪我們的線上體驗</h2>
+    <div class="fg">
+      <div class="fc sc"><div class="fi">🔍</div><h4>Google 掌握資訊入口</h4><p>掌握搜尋、瀏覽與影音入口。AI 搜尋不只回答問題，也更直接介入資訊整理與導流，影響我們如何找資料與做決定。</p></div>
+      <div class="fc sc"><div class="fi">📱</div><h4>Apple 掌握裝置生態系</h4><p>以 iPhone、iOS、App Store 串聯服務。競爭優勢建立在超過 25 億台活躍設備與龐大服務生態系之上。</p></div>
+      <div class="fc sc"><div class="fi">💬</div><h4>Meta 掌握社群分發</h4><p>Facebook、Instagram、Threads 形成內容矩陣。Meta 掌握龐大社交圖譜與演算法排序，能影響內容被誰看到、如何擴散。</p></div>
+    </div>
+    <blockquote class="bq2 fu">「當少數平台決定了我們看見什麼、討論什麼，這對一個社會意味著什麼？」</blockquote>
+    <p style="color:rgba(255,255,255,.62);text-align:center;font-size:.88rem;line-height:1.85;max-width:640px;margin:0 auto" class="fu">這場競爭的本質，不只是誰擁有最多使用者，而是誰能主導我們的線上生活——更進一步說，當這些入口集中在少數公司手中，我們該問的不只是「誰會贏」，而是「當少數平台決定了我們看見什麼、討論什麼，這對一個社會意味著什麼」。</p>
+  </div>
+</section>
+
+<!-- § 13 QUESTIONS -->
+<section id="q">
+  <div class="wrap">
+    <div class="lbl fu">Section 12</div>
+    <h2 class="ttl fu">個案研究問題</h2>
+    <p class="sub fu" style="text-align:center;margin-bottom:1.6rem">本報告依課本要求，自四題中擇二回答（第一、三題）</p>
+    <div class="qg">
+      <div class="qc sc">
+        <div class="qnum">Q1</div>
+        <h4>比較谷歌、蘋果以及臉書的經營模式與核心競爭力</h4>
+        <div class="qsub">
+          <div class="cm">
+            <div class="cmr"><span class="cml" style="color:#1a73e8">Google</span><div class="cmb" style="background:linear-gradient(90deg,#1a73e8,#4285f4);width:95%"></div><span class="cmv">廣告驅動</span></div>
+            <div class="cmr"><span class="cml" style="color:#555">Apple</span><div class="cmb" style="background:linear-gradient(90deg,#555,#aaa);width:82%"></div><span class="cmv">硬體+服務</span></div>
+            <div class="cmr"><span class="cml" style="color:#0082fb">Meta</span><div class="cmb" style="background:linear-gradient(90deg,#0082fb,#60a5fa);width:78%"></div><span class="cmv">社群廣告</span></div>
+          </div>
+          <p style="margin-top:.9rem">每月近 20 億活躍用戶，對許多用戶來說「臉書就是網路」。Google 利用搜尋優勢將 AI 深度引入資料檢索；Apple 從硬體公司轉型為「硬體＋軟體＋服務」整合型平台企業。</p>
+        </div>
+      </div>
+      <div class="qc sc">
+        <div class="qnum">Q3</div>
+        <h4>哪間公司以及經營模式最有可能主導網際網路？為什麼？</h4>
+        <div class="qsub">
+          <p style="margin-bottom:.85rem"><strong style="color:var(--blue)">Google 的優勢不只產品多</strong>，而是產品皆深化於我們日常生活的資訊取得、內容觀看、決策流程中。</p>
+          <p>AI 搜尋（AI Mode）、Gemini 語言模型、Android 生態系、YouTube 內容分發，形成多層次的數位入口護城河。未來可能是 Google 在資訊入口領先，Apple 在裝置體驗領先，Meta 在社群互動入口領先的三足鼎立格局。</p>
+        </div>
+      </div>
+    </div>
+    <div class="simg-row fu" style="margin-top:2rem">
+      <div>
+        <img src="images/q1-compare.png" alt="Q1：三大科技公司經營模式與核心競爭力比較表" class="simg" loading="lazy">
+        <p class="simg-cap">Q1 · 三大公司經營模式比較（簡報原圖）</p>
+      </div>
+      <div>
+        <img src="images/q3-google.png" alt="Q3：Google 最有可能主導未來網路體驗" class="simg" loading="lazy">
+        <p class="simg-cap">Q3 · Google 主導未來網路（簡報原圖）</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- § 14 PORTAL -->
+<section id="por">
+  <div class="wrap">
+    <div class="lbl fu" style="color:var(--cyan)">Section 13 · 延伸體驗</div>
+    <h2 class="ttl fu">報告結束！延伸體驗總入口</h2>
+    <p class="porsub fu">一次掃描，有興趣的慢慢探索 — 點擊卡片在新分頁開啟。</p>
+    <div class="porg">
+      <a class="porc sc" href="https://www.google.com" target="_blank" rel="noopener"><div class="porl">L1 · 資訊探索型</div><div class="pori">🔍</div><div class="porn">Google 搜尋</div><div class="pors">掌握 89% 全球搜尋入口</div><div class="port">Information Discovery</div></a>
+      <a class="porc sc" href="https://wallet.google.com" target="_blank" rel="noopener"><div class="porl">L2 · 交易服務型</div><div class="pori">💳</div><div class="porn">Google Wallet</div><div class="pors">行動支付 · 從意圖到付款</div><div class="port">Transaction Services</div></a>
+      <a class="porc sc" href="https://www.facebook.com" target="_blank" rel="noopener"><div class="porl">L3 · 社群互動型</div><div class="pori">👥</div><div class="porn">Facebook</div><div class="pors">35.8 億 DAP · 社群帝國</div><div class="port">Social Interaction</div></a>
+      <a class="porc sc" href="https://music.youtube.com" target="_blank" rel="noopener"><div class="porl">L4 · 內容娛樂型</div><div class="pori">🎵</div><div class="porn">YouTube Music</div><div class="pors">觸及 18.1M 台灣用戶</div><div class="port">Content Entertainment</div></a>
+      <a class="porc sc" href="https://gemini.google.com" target="_blank" rel="noopener"><div class="porl">L5 · 個人化 AI 型</div><div class="pori">🤖</div><div class="porn">Google Gemini</div><div class="pors">AI 語音對話 · 重塑搜尋入口</div><div class="port">Personalized AI</div></a>
+      <a class="porc sc" href="https://www.apple.com/apple-vision-pro/" target="_blank" rel="noopener"><div class="porl">L6 · 沉浸式體驗型</div><div class="pori">🥽</div><div class="porn">Apple Vision Pro</div><div class="pors">空間運算 · 最前沿體驗</div><div class="port">Immersive Experience</div></a>
+    </div>
+  </div>
+</section>
+
+<!-- § REFERENCES -->
+<section id="refs">
+  <div class="ref-wrap">
+    <div class="lbl fu" style="color:var(--cyan);text-align:center">References</div>
+    <h2 class="ttl fu" style="text-align:center;color:#fff">參考資料來源</h2>
+    <p class="sub fu" style="text-align:center;margin-bottom:2.5rem">共 34 筆 · APA 格式</p>
+    <div class="ref-cats fu">
+
+      <!-- 教科書 -->
+      <div class="ref-cat-block">
+        <div class="ref-cat-hd">教科書</div>
+        <div class="ref-item"><span class="ref-num">1</span><span class="ref-body">Laudon, K. C., &amp; Laudon, J. P. (2024). <em>管理資訊系統</em>（第16版，pp. 289–291）. 滄海圖書.</span></div>
+      </div>
+
+      <!-- 線上體驗定義 -->
+      <div class="ref-cat-block">
+        <div class="ref-cat-hd">線上體驗定義</div>
+        <div class="ref-item"><span class="ref-num">2</span><span class="ref-body">IBM. (2026, June 2). Digital experience. <em>IBM.</em> <a href="https://www.ibm.com/think/topics/digital-experience" target="_blank" rel="noopener">ibm.com/think/topics/digital-experience</a></span></div>
+        <div class="ref-item"><span class="ref-num">3</span><span class="ref-body">Hueffner, E. (2023, September 23). 什麼是客戶體驗？如何提供優越的客戶體驗. <em>Zendesk.</em> <a href="https://www.zendesk.tw/blog/customer-experience/relationships/why-companies-should-invest-in-the-customer-experience/" target="_blank" rel="noopener">zendesk.tw</a></span></div>
+        <div class="ref-item"><span class="ref-num">4</span><span class="ref-body">OpenText Corporation. (2026, June 2). What is digital experience?. <em>OpenText.</em> <a href="https://www.opentext.com/tw/what-is/digital-experience" target="_blank" rel="noopener">opentext.com/tw/what-is/digital-experience</a></span></div>
+      </div>
+
+      <!-- 台灣數位概況 -->
+      <div class="ref-cat-block">
+        <div class="ref-cat-hd">台灣數位概況</div>
+        <div class="ref-item"><span class="ref-num">5</span><span class="ref-body">DataReportal. (2026, May 17). Digital 2026: Taiwan. <em>DataReportal.</em> <a href="https://datareportal.com/reports/digital-2026-taiwan" target="_blank" rel="noopener">datareportal.com/reports/digital-2026-taiwan</a></span></div>
+        <div class="ref-item"><span class="ref-num">6</span><span class="ref-body">財團法人台灣網路資訊中心（TWNIC）. (2026, May 17). 2025 台灣網路報告. <em>TWNIC.</em> <a href="https://report.twnic.tw/2025/assets/download/TWNIC_TaiwanInternetReport_2025_CH_all.pdf" target="_blank" rel="noopener">report.twnic.tw/2025</a></span></div>
+        <div class="ref-item"><span class="ref-num">7</span><span class="ref-body">財團法人台灣網路資訊中心（TWNIC）. (2026, May 17). 2026 台灣網路報告摘要. <em>TWNIC.</em> <a href="https://www.twnic.net.tw/download/TWNIC_2023_InternetReport_2023_CH_summary.pdf" target="_blank" rel="noopener">twnic.net.tw</a></span></div>
+        <div class="ref-item"><span class="ref-num">8</span><span class="ref-body">Statcounter Global Stats. (2026, May 17). Search engine market share Taiwan. <a href="https://gs.statcounter.com/search-engine-market-share/all/taiwan" target="_blank" rel="noopener">gs.statcounter.com</a></span></div>
+        <div class="ref-item"><span class="ref-num">9</span><span class="ref-body">Statcounter Global Stats. (2026, May 17). Browser market share Taiwan. <a href="https://gs.statcounter.com/browser-market-share/all/taiwan/2025" target="_blank" rel="noopener">gs.statcounter.com/browser-market-share</a></span></div>
+        <div class="ref-item"><span class="ref-num">10</span><span class="ref-body">自由時報. (2023, May 25). 台灣前10大手機品牌出現新面孔. <em>自由時報電子報.</em> <a href="https://3c.ltn.com.tw/news/65846" target="_blank" rel="noopener">3c.ltn.com.tw/news/65846</a></span></div>
+        <div class="ref-item"><span class="ref-num">11</span><span class="ref-body">洋蔥科技. (2026, May 25). 2025年12月手機銷售榜揭曉！iPhone 17 系列穩居主流. <em>洋蔥科技.</em> <a href="https://www.onion-net.com.tw/news_detail/115" target="_blank" rel="noopener">onion-net.com.tw</a></span></div>
+      </div>
+
+      <!-- Google -->
+      <div class="ref-cat-block">
+        <div class="ref-cat-hd">Google / Alphabet</div>
+        <div class="ref-item"><span class="ref-num">12</span><span class="ref-body">Google. (2026, May 17). Our story. <em>Google.</em> <a href="https://about.google/company-info/our-story/" target="_blank" rel="noopener">about.google/company-info/our-story</a></span></div>
+        <div class="ref-item"><span class="ref-num">13</span><span class="ref-body">Alphabet Inc. (2026, May 17). Investor relations. <em>Alphabet Inc.</em> <a href="https://abc.xyz/investor/" target="_blank" rel="noopener">abc.xyz/investor</a></span></div>
+        <div class="ref-item"><span class="ref-num">14</span><span class="ref-body">Alphabet Inc. (2026). Q1 2026 earnings release. <em>Alphabet Inc.</em> <a href="https://s206.q4cdn.com/479360582/files/doc_financials/2026/q1/2026q1-alphabet-earnings-release.pdf" target="_blank" rel="noopener">PDF 原始連結</a></span></div>
+        <div class="ref-item"><span class="ref-num">15</span><span class="ref-body">Google. (2026, May 17). AI mode in Google Search. <em>The Keyword.</em> <a href="https://blog.google/products-and-platforms/products/search/ai-mode-search/" target="_blank" rel="noopener">blog.google</a></span></div>
+        <div class="ref-item"><span class="ref-num">16</span><span class="ref-body">Google. (2026, May 17). AI mode: A new way to search. <em>Google Search.</em> <a href="https://search.google/ways-to-search/ai-mode/" target="_blank" rel="noopener">search.google/ways-to-search/ai-mode</a></span></div>
+        <div class="ref-item"><span class="ref-num">17</span><span class="ref-body">Google. (2026, May 13). AI Overviews. <em>Google Search.</em> <a href="https://search.google/ways-to-search/ai-overviews/" target="_blank" rel="noopener">search.google/ways-to-search/ai-overviews</a></span></div>
+        <div class="ref-item"><span class="ref-num">18</span><span class="ref-body">Google. (2026, May 13). Introducing AI Mode: A new experiment in Google Search [影片]. <em>YouTube.</em> <a href="https://www.youtube.com/watch?v=qbqZQFOVfA8" target="_blank" rel="noopener">youtube.com/watch?v=qbqZQFOVfA8</a></span></div>
+        <div class="ref-item"><span class="ref-num">19</span><span class="ref-body">VOA 台灣中文. (2026, May 25). Google 網路廣告科技被認壟斷　歐盟重罰30億歐元. <em>VOA.</em> <a href="https://vos.tier.org.tw/Viewpoint01More.aspx?DGUID=755b9622-c029-4fd2-8eae-2964d2d68e41" target="_blank" rel="noopener">vos.tier.org.tw</a></span></div>
+      </div>
+
+      <!-- Apple -->
+      <div class="ref-cat-block">
+        <div class="ref-cat-hd">Apple</div>
+        <div class="ref-item"><span class="ref-num">20</span><span class="ref-body">Apple Inc. (2026, January). Apple reports first quarter results. <em>Apple Newsroom.</em> <a href="https://www.apple.com/newsroom/2026/01/apple-reports-first-quarter-results/" target="_blank" rel="noopener">apple.com/newsroom</a></span></div>
+        <div class="ref-item"><span class="ref-num">21</span><span class="ref-body">Apple Inc. (2026, April). Apple reports second quarter results. <em>Apple Newsroom.</em> <a href="https://www.apple.com/newsroom/2026/04/apple-reports-second-quarter-results/" target="_blank" rel="noopener">apple.com/newsroom</a></span></div>
+        <div class="ref-item"><span class="ref-num">22</span><span class="ref-body">Apple Inc. (2026, May 17). Investor relations. <em>Apple Investor Relations.</em> <a href="https://investor.apple.com/investor-relations/default.aspx" target="_blank" rel="noopener">investor.apple.com</a></span></div>
+        <div class="ref-item"><span class="ref-num">23</span><span class="ref-body">Apple Inc. (2025, March 29). Form 10-Q. <em>U.S. Securities and Exchange Commission.</em> <a href="https://www.sec.gov/Archives/edgar/data/320193/000032019325000057/aapl-20250329.htm" target="_blank" rel="noopener">sec.gov</a></span></div>
+        <div class="ref-item"><span class="ref-num">24</span><span class="ref-body">Analysis Group &amp; Apple Inc. (2024). Apple global ecosystem report: June 2025. <em>Apple Newsroom.</em> <a href="https://www.apple.com/newsroom/pdfs/2024-Apple-Global-Ecosystem-Report-June2025.pdf" target="_blank" rel="noopener">PDF 原始連結</a></span></div>
+        <div class="ref-item"><span class="ref-num">25</span><span class="ref-body">Apple Inc. (2026, May 13). Apple Intelligence gets even more powerful with new capabilities across Apple devices. <em>Apple Newsroom.</em> <a href="https://reurl.cc/A9rDmj" target="_blank" rel="noopener">reurl.cc/A9rDmj</a></span></div>
+        <div class="ref-item"><span class="ref-num">26</span><span class="ref-body">Apple. (2026, May 13). Apple Intelligence | Privacy [影片]. <em>YouTube.</em> <a href="https://www.youtube.com/watch?v=546ufMY7488" target="_blank" rel="noopener">youtube.com/watch?v=546ufMY7488</a></span></div>
+      </div>
+
+      <!-- Meta -->
+      <div class="ref-cat-block">
+        <div class="ref-cat-hd">Meta</div>
+        <div class="ref-item"><span class="ref-num">27</span><span class="ref-body">Meta Platforms, Inc. (2026, May 17). Financials. <em>Meta Investor Relations.</em> <a href="https://investor.atmeta.com/financials/" target="_blank" rel="noopener">investor.atmeta.com/financials</a></span></div>
+        <div class="ref-item"><span class="ref-num">28</span><span class="ref-body">Meta Platforms, Inc. (2026). Meta reports first quarter 2026 results. <em>Meta Investor Relations.</em> <a href="https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-First-Quarter-2026-Results/default.aspx" target="_blank" rel="noopener">investor.atmeta.com</a></span></div>
+        <div class="ref-item"><span class="ref-num">29</span><span class="ref-body">Meta Platforms, Inc. (2026). Meta reports fourth quarter and full year 2025 results. <em>Meta Investor Relations.</em> <a href="https://investor.atmeta.com/investor-news/press-release-details/2026/Meta-Reports-Fourth-Quarter-and-Full-Year-2025-Results/default.aspx" target="_blank" rel="noopener">investor.atmeta.com</a></span></div>
+        <div class="ref-item"><span class="ref-num">30</span><span class="ref-body">Meta. (2023, July). Introducing Threads: A new app for text sharing. <em>Meta Newsroom.</em> <a href="https://about.fb.com/news/2023/07/introducing-threads-new-app-text-sharing/" target="_blank" rel="noopener">about.fb.com</a></span></div>
+        <div class="ref-item"><span class="ref-num">31</span><span class="ref-body">Meta. (2025, April). Introducing Meta AI app: A new way to access your AI assistant. <em>Meta Newsroom.</em> <a href="https://about.fb.com/news/2025/04/introducing-meta-ai-app-new-way-access-ai-assistant/" target="_blank" rel="noopener">about.fb.com</a></span></div>
+        <div class="ref-item"><span class="ref-num">32</span><span class="ref-body">Meta AI. (2026, May 17). Meta AI. <em>Meta.</em> <a href="https://ai.meta.com/" target="_blank" rel="noopener">ai.meta.com</a></span></div>
+        <div class="ref-item"><span class="ref-num">33</span><span class="ref-body">Oakley Meta. (2026, May 13). Introducing Performance AI glasses by Oakley Meta [影片]. <em>YouTube.</em> <a href="https://www.youtube.com/watch?v=Wr-_neqfirc" target="_blank" rel="noopener">youtube.com/watch?v=Wr-_neqfirc</a></span></div>
+        <div class="ref-item"><span class="ref-num">34</span><span class="ref-body">天下雜誌. (2026, June 3). 臉書壟斷案荒謬開庭，《經濟學人》：應盡速終結鬧劇. <em>天下雜誌.</em> <a href="https://www.cw.com.tw/article/5134971" target="_blank" rel="noopener">cw.com.tw</a></span></div>
+      </div>
+
+      <!-- 法規與監管 -->
+      <div class="ref-cat-block" style="grid-column:1/-1">
+        <div class="ref-cat-hd">法規、監管與新聞</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 2.5rem">
+          <div>
+            <div class="ref-item"><span class="ref-num">35</span><span class="ref-body">U.S. Department of Justice. (2026, May 26). Department of Justice wins significant remedies against Google. <a href="https://www.justice.gov/opa/pr/department-justice-wins-significant-remedies-against-google" target="_blank" rel="noopener">justice.gov</a></span></div>
+            <div class="ref-item"><span class="ref-num">36</span><span class="ref-body">U.S. Department of Justice. (2026, May 17). Department of Justice prevails in landmark antitrust case against Google. <a href="https://reurl.cc/grAloz" target="_blank" rel="noopener">reurl.cc/grAloz</a></span></div>
+            <div class="ref-item"><span class="ref-num">37</span><span class="ref-body">Federal Trade Commission. (2026, January). FTC appeals ruling in Meta monopolization case. <a href="https://www.ftc.gov/news-events/news/press-releases/2026/01/ftc-appeals-ruling-meta-monopolization-case" target="_blank" rel="noopener">ftc.gov</a></span></div>
+            <div class="ref-item"><span class="ref-num">38</span><span class="ref-body">European Commission. (2026, May 26). Commission finds Apple and Meta in breach of the Digital Markets Act. <a href="https://digital-strategy.ec.europa.eu/en/news/commission-finds-apple-and-meta-breach-digital-markets-act" target="_blank" rel="noopener">ec.europa.eu</a></span></div>
+            <div class="ref-item"><span class="ref-num">39</span><span class="ref-body">Autorité de la concurrence. (2026, May 17). Targeted advertising: fine of €150,000,000 on Apple. <a href="https://www.autoritedelaconcurrence.fr/en/press-release/targeted-advertising-autorite-de-la-concurrence-imposes-fine-eu150000000-apple" target="_blank" rel="noopener">autoritedelaconcurrence.fr</a></span></div>
+          </div>
+          <div>
+            <div class="ref-item"><span class="ref-num">40</span><span class="ref-body">國家通傳委員會國際通傳產業. (2026, May 26). 美國聯邦法院裁定Google不須出售Chrome或Android，但須向競爭對手開放部分搜尋資料. <a href="https://intlfocus.ncc.gov.tw/xcdoc/cont?xsmsid=0J210565885111070723&sid=0P310641395668390981" target="_blank" rel="noopener">intlfocus.ncc.gov.tw</a></span></div>
+            <div class="ref-item"><span class="ref-num">41</span><span class="ref-body">公平交易委員會. (2026, May 25). 蘋果公司濫用音樂串流市場優勢地位. <a href="https://www.ftc.gov.tw/upload/enews/1130703-1.pdf" target="_blank" rel="noopener">ftc.gov.tw</a></span></div>
+            <div class="ref-item"><span class="ref-num">42</span><span class="ref-body">公平交易委員會. (2026, May 25). Apple公司因隱私政策濫用市場優勢地位遭重罰逾9,800萬歐元. <a href="https://www.ftc.gov.tw/upload/enews/1150304-1.pdf" target="_blank" rel="noopener">ftc.gov.tw</a></span></div>
+            <div class="ref-item"><span class="ref-num">43</span><span class="ref-body">udn 科技玩家. (2026, June 3). 美國司法部裁定Google以其平台、廣告技術造成市場壟斷. <a href="https://tech.udn.com/tech/story/123153/6930192" target="_blank" rel="noopener">tech.udn.com</a></span></div>
+            <div class="ref-item"><span class="ref-num">44</span><span class="ref-body">Yahoo 新聞. (2026, May 17). 終允App Store外部付款 卻遭轟粉飾. <a href="https://reurl.cc/R2VDgz" target="_blank" rel="noopener">reurl.cc/R2VDgz</a></span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>爭奪線上體驗：谷歌、蘋果與臉書 &nbsp;|&nbsp; 管理資訊系統 個案報告</p>
+  <p>方宇旭 · 吳哲安 · 徐偉哲 &nbsp;|&nbsp; 2026</p>
+</footer>
+
+<script>
+/* ── Stars ── */
+(()=>{
+  const c=document.getElementById('stars'),ctx=c.getContext('2d');
+  let stars=[];
+  const resize=()=>{c.width=innerWidth;c.height=innerHeight};
+  const init=()=>{stars=[];for(let i=0;i<160;i++)stars.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.4+.3,sp:Math.random()*.28+.08,op:Math.random()*.65+.2})};
+  const draw=()=>{ctx.clearRect(0,0,c.width,c.height);stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.op})`;ctx.fill();s.y+=s.sp;if(s.y>c.height){s.y=0;s.x=Math.random()*c.width}});requestAnimationFrame(draw)};
+  resize();init();draw();
+  window.addEventListener('resize',()=>{resize();init()});
+})();
+
+/* ── Progress bar ── */
+window.addEventListener('scroll',()=>{
+  document.getElementById('prog').style.width=(scrollY/(document.body.scrollHeight-innerHeight)*100)+'%';
+},{passive:true});
+
+/* ── Navbar highlight ── */
+const secs=[...document.querySelectorAll('section[id]')];
+const navAs=[...document.querySelectorAll('#nav-links a')];
+const nav=document.getElementById('nav');
+const lightIds=['def','tw','hist','gov','ap','q'];
+window.addEventListener('scroll',()=>{
+  const pos=scrollY+70;
+  let cur='';
+  secs.forEach(s=>{if(pos>=s.offsetTop)cur=s.id});
+  navAs.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
+  nav.classList.toggle('light',lightIds.includes(cur));
+},{passive:true});
+
+/* ── Hamburger ── */
+function toggleMenu(){const m=document.getElementById('mob-menu');m.style.display=m.style.display==='flex'?'none':'flex'}
+
+/* ── IntersectionObserver ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    // Fade-up
+    e.target.querySelectorAll('.fu').forEach(el=>el.classList.add('on'));
+    // Stagger children
+    e.target.querySelectorAll('.sc').forEach((el,i)=>setTimeout(()=>el.classList.add('on'),i*110));
+    // Counters
+    e.target.querySelectorAll('[data-target]').forEach(el=>animCount(el));
+    // Bars
+    e.target.querySelectorAll('.brf[data-w]').forEach(b=>setTimeout(()=>{b.style.width=b.dataset.w+'%'},320));
+    io.unobserve(e.target);
+  });
+},{threshold:.12});
+secs.forEach(s=>{if(s.id!=='hero')io.observe(s)});
+
+/* ── Counter ── */
+function animCount(el){
+  const tgt=parseFloat(el.dataset.target);
+  const sfx=el.textContent.replace(/[\d.]/g,'');
+  let cur=0;const dur=1700,step=15,inc=tgt/(dur/step);
+  const t=setInterval(()=>{cur=Math.min(cur+inc,tgt);el.textContent=cur.toFixed(1)+sfx;if(cur>=tgt)clearInterval(t)},step);
+}
+
+/* ── Pyramid animation (bottom-up) ── */
+const pyrObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const layers=[...document.querySelectorAll('.pl')];
+    // layers[0]=l6(top), layers[5]=l1(bottom). Animate bottom first.
+    [5,4,3,2,1,0].forEach((idx,order)=>setTimeout(()=>layers[idx]&&layers[idx].classList.add('on'),order*140));
+    pyrObs.unobserve(e.target);
+  });
+},{threshold:.18});
+const ps=document.getElementById('pyrstack');
+if(ps)pyrObs.observe(ps);
+
+/* ── Pyramid detail ── */
+function showLay(n){
+  document.querySelectorAll('.dc2').forEach(d=>d.classList.remove('show'));
+  document.querySelectorAll('.pl').forEach(l=>l.classList.remove('sel'));
+  const d=document.getElementById('d'+n);if(d)d.classList.add('show');
+  const l=document.querySelector('[data-lay="'+n+'"]');if(l)l.classList.add('sel');
+}
+showLay(1);
+
+/* ── Tabs ── */
+function swTab(name,btn){
+  document.querySelectorAll('.tp').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('t'+name[0]).classList.add('on');
+  btn.classList.add('on');
+}
+
+/* ── QR Code ── */
+window.addEventListener('load',()=>{
+  const el=document.getElementById('qrcode');
+  if(el&&typeof QRCode!=='undefined'){
+    new QRCode(el,{text:'https://app.sli.do/event/dUcwDWYHoDqbYQ4NBTBtiG/live/polls',width:192,height:192,colorDark:'#1B2A4A',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+  }
+});
+
+/* ── Parallax on hero scroll ── */
+window.addEventListener('scroll',()=>{
+  if(scrollY<innerHeight){
+    document.getElementById('stars').style.transform='translateY('+(scrollY*.22)+'px)';
+  }
+},{passive:true});
+
+/* ── Trigger .fu on load for hero ── */
+setTimeout(()=>{
+  document.querySelector('#hero').querySelectorAll('.fu').forEach(el=>el.classList.add('on'));
+  document.querySelector('#hero').querySelectorAll('.sc').forEach((el,i)=>setTimeout(()=>el.classList.add('on'),i*120+200));
+},100);
+</script>
+</body>
+</html>
